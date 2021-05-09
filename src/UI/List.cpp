@@ -90,25 +90,8 @@ void List::focus() {
     return true;
   };
 
-  // auto onRotate = [](RotaryHelper *rotaryHelper, int value, int change) {
-  //   // Serial.println("List Rotary Change");
-  //   List *list = (List *)rotaryHelper->component;
-
-  //   // Serial.println(list->test);
-  //   // Serial.println(rotaryHelper->test);
-
-  //   Serial.print("Cast List: ");
-  //   Serial.println(list->instance);
-
-  //   if (change > 0)
-  //   {
-  //     list->navDown();
-  //   }
-  //   else
-  //   {
-  //     list->navUp();
-  //   }
-  // };
+  if (*selectedItemIndex > itemCount - 1)
+    *selectedItemIndex = itemCount - 1;
 }
 
 void List::navUp() {

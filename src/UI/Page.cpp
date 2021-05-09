@@ -24,6 +24,11 @@ void Page::addComponent(Component *component, bool defaultFocus = false) {
       currentFocus = component;
     }
   } else if (!currentFocus || defaultFocus) {
+    if (currentFocus)
+    {
+      currentFocus->blur();
+    }
+    
     component->focus();
     currentFocus = component;
   }
@@ -97,4 +102,10 @@ void Page::focusPrevious() {
     getCurrentState()->focusIndex = componentCount - 1;
     newFocus->focus();
   }
+};
+
+void Page::applyPageTask(RunTask pageTask, PageCallback *cleanup = nullptr){
+  this->pageTask = pageTask;
+  this->cleanup = cleanup;
+  Tasker::bindPageTask(this);
 };

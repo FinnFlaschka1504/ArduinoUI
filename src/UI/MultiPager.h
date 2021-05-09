@@ -8,6 +8,8 @@ class MultiPager : public PageHolder {
 public:
   byte currentPageIndex = 0;
   byte generatePageCount = 0;
+  byte currentPageIndicatorX = 0;
+  byte currentPageIndicatorY = 64;
   GeneratePage *generatePageArr[5] = {nullptr, nullptr, nullptr, nullptr,
                                       nullptr};
   int focusArr[5] = {-1, -1, -1, -1, -1};

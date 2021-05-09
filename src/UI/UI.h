@@ -1,12 +1,14 @@
 typedef void (*InterlacedInRender)(Page *page);
+typedef void (ShowDialog)();
 
 class UI {
 public:
-  static U8G2_KS0108_128X64_1 lcd;
-  // static U8G2_ST7920_128X64_1_SW_SPI lcd;
+  // static U8G2_KS0108_128X64_1 lcd;
+  static U8G2_ST7920_128X64_1_SW_SPI lcd;
   // static InputManager inputManager;
   static Router router;
   static InterlacedInRender interlacedInRender;
+  static ShowDialog *showDialog;
   static bool pendingRender;
   static bool suspendRender;
   static bool permanentRender;

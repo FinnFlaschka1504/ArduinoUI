@@ -1,26 +1,40 @@
 #include "Helper/IncludeAll.h"
 
 void NumberSelect::draw() {
-  lcd.setFont(u8g2_font_t0_11_tf);
+  lcd.setFont(u8g2_font_t0_11_me);
+
+  int prefixShift = 0;
+  if (prefix)
+  {
+    prefixShift = lcd.getUTF8Width(prefix);
+    lcd.drawUTF8(x, y, prefix);
+  }
+
+  if (suffix)
+  {
+    lcd.drawUTF8(x + prefixShift + digits * 6, y, suffix);
+  }
+  
   char buf1[10];
   sprintf(buf1, "%%0%dd", digits);
   char buf2[100];
   sprintf(buf2, buf1, *value);
-  lcd.drawStr(x, y, buf2);
+  lcd.drawStr(x + prefixShift, y, buf2);
 
   if (focused) {
-    lcd.drawLine(x, y + 1, x + digits * 6 - 1, y + 1);
+    lcd.drawLine(x + prefixShift, y + 1, x + prefixShift + digits * 6 - 1, y + 1);
   }
 };
 
 void NumberSelect::focus() {
   Component::focus();
 
-  InputManager::rawInput = [](byte pin, bool release, bool longPress,
+  InputManager::focusRawInput = [](byte pin, bool release, bool longPress,
                               int change) {
     NumberSelect *numberSelect = (NumberSelect *)getCurrentFocus();
 
     switch (pin) {
+    case ROTARY_LCD_RIGHT:
     case BUTTON_U:
       if (!release && longPress) {
         numberSelect->taskId = taskManager.scheduleFixedRate(700, []() {
@@ -39,6 +53,7 @@ void NumberSelect::focus() {
         UI::reRender();
       }
       break;
+    case ROTARY_LCD_LEFT:
     case BUTTON_D:
       if (!release && longPress) {
         numberSelect->taskId = taskManager.scheduleFixedRate(700, []() {
@@ -66,7 +81,7 @@ void NumberSelect::focus() {
   };
 
   onBlur = [](Component *component){
-    InputManager::rawInput = nullptr;
+    InputManager::focusRawInput = nullptr;
   };
 };
 

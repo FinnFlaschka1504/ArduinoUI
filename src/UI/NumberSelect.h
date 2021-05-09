@@ -5,9 +5,14 @@ public:
   byte stepSize = 1;
   byte bigStepSize = 5;
   uint8_t taskId = -1;
-  bool loop = false;
+  bool loop = true;
   bool allowNegative = false;
-  NumberSelect(int x, int y, int *value) : Component(x, y), value(value){};
+  const char *prefix = nullptr;
+  const char *suffix = nullptr;
+  NumberSelect(int x, int y, int *value, const char *prefix = nullptr, const char *suffix = nullptr) : Component(x, y), value(value), prefix(prefix), suffix(suffix) {};
+  NumberSelect(int x, int y, int *value, int minValue, int maxValue, const char *prefix = nullptr, const char *suffix = nullptr) : Component(x, y), value(value), prefix(prefix), suffix(suffix) {
+    setBounds(minValue, maxValue);
+  };
   void draw() override;
   void focus() override;
   // void blur() {

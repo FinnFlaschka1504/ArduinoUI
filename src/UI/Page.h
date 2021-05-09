@@ -8,6 +8,7 @@ public:
   Component *components[5];
   PageCallback *drawPageComponents = nullptr;
   PageCallback *beforeDestroy = nullptr;
+  PageCallback *cleanup = nullptr;
   RunTask pageTask = nullptr;
   Page(){};
   Page(PageCallback *drawPageComponents)
@@ -20,6 +21,7 @@ public:
   byte getCurrentFocusIndex(bool lazy = true);
   void focusNext();
   void focusPrevious();
+  void applyPageTask(RunTask pageTask, PageCallback *cleanup = nullptr);
 };
 
 // eventuell buildPage Callback implementieren
@@ -31,9 +33,9 @@ public:
   ProgressTestPage(){};
   ProgressTestPage(PageCallback *drawPageComponents) : Page(drawPageComponents) {
     pageTask = []() {
-      G::stepperTilt.setMaxSpeed(2000);
-      G::stepperTilt.setSpeed((((ProgressTestState *)UI::getCurrentState())->progress - 5) * 2);
-      G::stepperTilt.runSpeed();
+      // MH::stepperTilt.setMaxSpeed(5000);
+      MH::stepperTilt.setSpeed((((ProgressTestState *)UI::getCurrentState())->progress - 5) * 1000);
+      MH::stepperTilt.runSpeed();
     };
     Tasker::bindPageTask(this);
   };

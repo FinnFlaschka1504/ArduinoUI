@@ -15,7 +15,11 @@ void Tasker::addTask(RunTask task) {
 
 void Tasker::bindPageTask(Page *page) {
   addTask(page->pageTask);
-  page->beforeDestroy = [](Page *page) { Tasker::removeTask(page->pageTask); };
+  page->beforeDestroy = [](Page *page) { 
+    Tasker::removeTask(page->pageTask); 
+    if (page->cleanup)
+      page->cleanup(page);
+  };
 };
 
 void Tasker::removeTask(RunTask task) {
@@ -26,6 +30,7 @@ void Tasker::removeTask(RunTask task) {
         tasks[k] = tasks[k + 1];
       }
       tasks[taskCount - 1] = nullptr;
+      taskCount--;
       return;
     }
   }

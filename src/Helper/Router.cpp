@@ -1,6 +1,7 @@
 #include <Helper/IncludeAll.h>
 
-void Router::init(PageHolder *rootPageHolder) {
+void Router::init(PageHolder *rootPageHolder)
+{
   this->pageHolderStack[0] = rootPageHolder;
   pageHolderStackHeight = 1;
   this->currentPageHolder = rootPageHolder;
@@ -9,7 +10,8 @@ void Router::init(PageHolder *rootPageHolder) {
 
 void Router::render() { currentPageHolder->render(); }
 
-void Router::navigate(PageHolder *newPageHolder) {
+void Router::navigate(PageHolder *newPageHolder)
+{
   oldPageHolder = currentPageHolder;
   oldPageHolder->clear();
   currentPageHolder = newPageHolder;
@@ -19,38 +21,48 @@ void Router::navigate(PageHolder *newPageHolder) {
 
   // wo wird das neue auf den Stack geschrieben
   // auch verhindern können, dass stack erhöht wird
+  pageHolderStack[pageHolderStackHeight] = newPageHolder;
   pageHolderStackHeight++;
   oldPageHolder = nullptr;
 
-  printFreeMemory("After Navigate: ");
+  // printFreeMemory("After Navigate: ");
 };
+
+void Router::resetStack() {
+  for (byte i = 0; i < pageHolderStackHeight; i++)
+    pageHolderStack[i] = nullptr;
+  
+  pageHolderStack[0] = currentPageHolder;
+  pageHolderStackHeight = 1;
+}
 
 void Router::reloadPage()
 {
   currentPageHolder->clear();
   delete currentPageHolder->page;
   currentPageHolder->generate();
-  printFreeMemory("After Reload: ");
+  // printFreeMemory("After Reload: ");
 };
 
-
-void Router::back() {
-  if (pageHolderStackHeight > 1) {
+void Router::back()
+{
+  if (pageHolderStackHeight > 1)
+  {
     PageHolder *newPageHolder = pageHolderStack[pageHolderStackHeight - 2];
     oldPageHolder = currentPageHolder;
 
     oldPageHolder->clear();
     currentPageHolder = newPageHolder;
     newPageHolder->generate();
-    printFreeMemory();
 
     delete oldPageHolder->page;
     oldPageHolder->page = nullptr;
 
     pageHolderStackHeight--;
+    pageHolderStack[pageHolderStackHeight] = nullptr;
     oldPageHolder = nullptr;
 
-    printFreeMemory("After Back: ");
+    // printFreeMemory("After Back: ");
   }
 }
 
@@ -62,7 +74,8 @@ void Router::back() {
 PageHolder::PageHolder(PageId pageId, GeneratePage *generatePage, PageState *state)
     : pageId(pageId), generatePage(generatePage), state(state) {}
 
-void PageHolder::generate() {
+void PageHolder::generate()
+{
   page = generatePage();
   UI::getCurrentState()->focusIndex = page->getCurrentFocusIndex(false);
 };

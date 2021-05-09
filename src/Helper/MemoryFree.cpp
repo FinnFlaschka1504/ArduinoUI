@@ -53,8 +53,8 @@ int freeMemory()
 void printFreeMemory(const char* tag = nullptr)
 {
     if (tag)
-        Serial1.print(tag);
-    Serial1.print("freeMemory()=");
-    Serial1.print(freeMemory());
-    Serial1.println(" Bytes");
+        Serial.print(tag);
+    Serial.print("freeMemory()=");
+    Serial.print(freeMemory());
+    Serial.println(" Bytes");
 }

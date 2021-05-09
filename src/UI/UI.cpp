@@ -1,11 +1,13 @@
 #include <Helper/IncludeAll.h>
 
-// U8G2_ST7920_128X64_1_SW_SPI UI::lcd(U8G2_R0, 23 /*clock*/, 17 /*data*/,
-// 16/*cs*/);
-U8G2_KS0108_128X64_1 UI::lcd(U8G2_R0, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
-                             40, 41, 42, 43);
+U8G2_ST7920_128X64_1_SW_SPI UI::lcd(U8G2_R0, 23 /*clock*/, 17 /*data*/,
+16/*cs*/);
+// U8G2_KS0108_128X64_1 UI::lcd(U8G2_R0, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+//                              40, 41, 42, 43);
 
 // InputManager UI::inputManager;
+
+ShowDialog *UI::showDialog = nullptr;
 
 Router UI::router;
 
@@ -15,7 +17,11 @@ bool UI::pendingRender = true;
 bool UI::suspendRender = false;
 bool UI::permanentRender = false;
 
-void UI::render() { router.render(); }
+void UI::render() { 
+  router.render(); 
+  if (showDialog)
+    showDialog();
+}
 
 Component *UI::getCurrentFocus() {
   return router.currentPageHolder->page->currentFocus;
@@ -40,6 +46,7 @@ PageId UI::getCurrentPageId() { return router.currentPageHolder->pageId; };
 bool UI::shouldRender() { return pendingRender || permanentRender; }
 
 void UI::reRender() {
+  // Serial1.println("rerender");
   if (!suspendRender)
     pendingRender = true;
 };
